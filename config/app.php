@@ -146,6 +146,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Track Tik Config
+    |--------------------------------------------------------------------------
+    |
+    | These configuration are for track tik API
+    |
+    */
+
+    'track_tik' => [
+        'base_url' => env('TRACK_TIK_BASE_URL'),
+        'client_id' => env('TRACK_TIK_CLIENT_ID'),
+        'client_secret' => env('TRACK_TIK_CLIENT_SECRET'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Autoloaded Service Providers
     |--------------------------------------------------------------------------
     |
