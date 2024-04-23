@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Schemas\EmployeeProvider1;
+use App\Schemas\EmployeeProvider2;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class EmployeeRequest extends FormRequest
 {
@@ -21,8 +24,16 @@ class EmployeeRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
+        $providerRules = [
+            'provider' => ['required', Rule::in([EmployeeProvider1::$providerName, EmployeeProvider2::$providerName])],
         ];
+
+        $provider = $this->input('provider');
+        $mappingRules = match ($provider) {
+            EmployeeProvider1::$providerName => EmployeeProvider1::getValidationRules(),
+            EmployeeProvider2::$providerName => EmployeeProvider2::getValidationRules(),
+        };
+
+        return array_merge($providerRules, $mappingRules);
     }
 }
