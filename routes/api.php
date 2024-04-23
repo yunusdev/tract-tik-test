@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\EmployeeController;
+use App\Schemas\EmployeeProvider1;
+use App\Schemas\EmployeeProvider2;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,4 +17,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::apiResource('/employees/{provider}', EmployeeController::class);
+Route::apiResource('{provider}/employees', EmployeeController::class)
+    ->whereIn('provider', [EmployeeProvider1::$providerName, EmployeeProvider2::$providerName]);

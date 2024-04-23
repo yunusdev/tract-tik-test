@@ -4,7 +4,6 @@ namespace App\Contracts;
 
 interface EmployeeContract
 {
-
-    public function createEmployee();
+    public function createEmployee(string $provider, array $data);
 
 }

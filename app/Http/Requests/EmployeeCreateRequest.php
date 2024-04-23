@@ -7,14 +7,14 @@ use App\Schemas\EmployeeProvider2;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class EmployeeRequest extends FormRequest
+class EmployeeCreateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,10 +25,10 @@ class EmployeeRequest extends FormRequest
     public function rules(): array
     {
         $providerRules = [
-            'provider' => ['required', Rule::in([EmployeeProvider1::$providerName, EmployeeProvider2::$providerName])],
+//            'provider' => ['required', Rule::in([EmployeeProvider1::$providerName, EmployeeProvider2::$providerName])],
         ];
+        $provider = $this->route('provider');
 
-        $provider = $this->input('provider');
         $mappingRules = match ($provider) {
             EmployeeProvider1::$providerName => EmployeeProvider1::getValidationRules(),
             EmployeeProvider2::$providerName => EmployeeProvider2::getValidationRules(),
@@ -36,4 +36,5 @@ class EmployeeRequest extends FormRequest
 
         return array_merge($providerRules, $mappingRules);
     }
+
 }
