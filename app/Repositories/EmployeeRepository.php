@@ -21,6 +21,14 @@ class EmployeeRepository implements EmployeeContract
     /**
      * @throws GuzzleException
      */
+    public function fetch(string|null $provider)
+    {
+        return $this->trackTickApiService->fetchEmployees($provider);
+    }
+
+    /**
+     * @throws GuzzleException
+     */
     public function store(string $provider, array $data)
     {
         $mappedData = match ($provider){

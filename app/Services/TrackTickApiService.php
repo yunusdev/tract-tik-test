@@ -47,10 +47,31 @@ class TrackTickApiService
     /**
      * @throws Exception|GuzzleException
      */
+    public function fetchEmployees(string|null $provider)
+    {
+        try {
+            $response = $this->client->get('employees', [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . env('TRACK_TIK_ACCESS_TOKEN'),
+                ],
+                'query' => [
+                    'tags:in' => $provider,
+                ]
+            ]);
+
+            return json_decode($response->getBody(), true);
+        } catch (RequestException $e) {
+            throw new Exception('Failed get data from TrackTik API: ' . $e->getMessage(), $e->getCode());
+        }
+    }
+
+    /**
+     * @throws Exception|GuzzleException
+     */
     public function storeEmployee(array $data)
     {
         try {
-            $response = $this->client->post('rest/v1/employees', [
+            $response = $this->client->post('employees', [
                 'headers' => [
                     'Authorization' => 'Bearer ' . env('TRACK_TIK_ACCESS_TOKEN'),
                 ],
@@ -69,7 +90,7 @@ class TrackTickApiService
     public function updateEmployee(int $employeeId, array $data)
     {
         try {
-            $response = $this->client->put("rest/v1/employees/{$employeeId}", [
+            $response = $this->client->put("employees/{$employeeId}", [
                 'headers' => [
                     'Authorization' => 'Bearer ' . env('TRACK_TIK_ACCESS_TOKEN'),
                 ],
