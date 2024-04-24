@@ -4,9 +4,9 @@ namespace App\Schemas;
 
 class EmployeeProvider1
 {
-    public static $providerName = 'provider1';
+    public static string $providerName = 'provider1';
 
-    public static function mapAttributes($data)
+    public static function mapAttributes($data): array
     {
         return [
             'email' => $data['email'],
@@ -15,7 +15,7 @@ class EmployeeProvider1
         ];
     }
 
-    public static function getValidationRules()
+    public static function getValidationRules(): array
     {
         return [
             'email' => 'required|email',
