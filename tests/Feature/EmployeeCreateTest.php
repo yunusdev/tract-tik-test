@@ -49,15 +49,15 @@ class EmployeeCreateTest extends TestCase
                 'last_name' => 'Steven'
             ], ['email']],
 
-            ['provider2', 422, [], ['first_name', 'last_name', 'phone', 'username']],
+            ['provider2', 422, [], ['first_name', 'last_name', 'phone', 'job_title']],
             ['provider2', 422, [
                 'first_name' => 'Adam',
                 'last_name' => 'Steven'
-            ], ['phone', 'username']],
+            ], ['phone', 'job_title']],
             ['provider2', 422, [
                 'first_name' => 'Adam',
                 'last_name' => 'Steven',
-                'username' => 'adamsteve'
+                'job_title' => 'PHP Developer'
             ], ['phone']],
 
         ];

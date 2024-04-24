@@ -47,10 +47,10 @@ class TrackTickApiService
     /**
      * @throws Exception|GuzzleException
      */
-    public function sendEmployeeData($data)
+    public function storeEmployee($data)
     {
         try {
-            $response = $this->client->post('employees', [
+            $response = $this->client->post('rest/v1/employees', [
                 'headers' => [
                     'Authorization' => 'Bearer ' . env('TRACK_TIK_ACCESS_TOKEN'),
                 ],

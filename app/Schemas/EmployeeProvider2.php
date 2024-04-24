@@ -12,7 +12,7 @@ class EmployeeProvider2
             'firstName' => $data['first_name'],
             'lastName' => $data['last_name'],
             'primaryPhone' => $data['phone'],
-            'username' => $data['username'],
+            'jobTitle' => $data['job_title'],
         ];
     }
 
@@ -22,7 +22,7 @@ class EmployeeProvider2
             'first_name' => 'required|string',
             'last_name' => 'required|string',
             'phone' => 'required|string',
-            'username' => 'required|string',
+            'job_title' => 'required|string',
         ];
     }
 }

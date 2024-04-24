@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\EmployeeCreateRequest;
 use App\Repositories\EmployeeRepository;
+use Exception;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -20,7 +22,7 @@ class EmployeeController extends Controller
     public function store($provider, EmployeeCreateRequest $request): JsonResponse
     {
         try {
-            $employee = $this->employeeRepository->createEmployee($provider, $request->all());
+            $employee = $this->employeeRepository->storeEmployee($provider, $request->all());
 
             return $this->returnSuccess(
                 'Employee created successfully.',
@@ -29,10 +31,10 @@ class EmployeeController extends Controller
                     'employee' => $employee
                 ]
             );
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return $this->returnError($exception->getMessage(), $exception->getCode());
         }
-
-
     }
+
+
 }
