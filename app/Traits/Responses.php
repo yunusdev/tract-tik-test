@@ -29,15 +29,16 @@ trait Responses
 
     /**
      * @param string|null $message
-     * @param int $code
+     * @param int|string $code
      * @param array|null $data
      * @return JsonResponse
      */
     protected function returnError(
         string $message = null,
-        int $code = Response::HTTP_INTERNAL_SERVER_ERROR,
+        int|string $code = Response::HTTP_INTERNAL_SERVER_ERROR,
         array $data = null
     ): JsonResponse {
+        if ($code == "0") $code = Response::HTTP_INTERNAL_SERVER_ERROR;
         return response()->json([
             'success' => false,
             'message' => $message ?? 'An error occurred',

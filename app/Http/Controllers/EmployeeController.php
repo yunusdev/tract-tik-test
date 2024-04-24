@@ -32,6 +32,8 @@ class EmployeeController extends Controller
                 ]
             );
         } catch (Exception $exception) {
+            info('Code: ' . $exception->getCode());
+            info('message' . $exception->getMessage());
             return $this->returnError($exception->getMessage(), $exception->getCode());
         }
     }
