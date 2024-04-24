@@ -17,14 +17,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group([], function (){
-    Route::get('/employees', [EmployeeController::class, 'index']);
-    Route::get('/employees/{employee}', [EmployeeController::class, 'get'])
-            ->whereNumber('employee');
-    Route::post('/{provider}/employees', [EmployeeController::class, 'store'])
-        ->whereIn('provider', [EmployeeProvider1::$providerName, EmployeeProvider2::$providerName]);
-    Route::put('/{provider}/employees/{employee}', [EmployeeController::class, 'update'])
-        ->whereIn('provider', [EmployeeProvider1::$providerName, EmployeeProvider2::$providerName])
+Route::get('/employees', [EmployeeController::class, 'index']);
+Route::get('/employees/{employee}', [EmployeeController::class, 'get'])
         ->whereNumber('employee');
-});
+Route::post('/{provider}/employees', [EmployeeController::class, 'store'])
+    ->whereIn('provider', [EmployeeProvider1::$providerName, EmployeeProvider2::$providerName]);
+Route::put('/{provider}/employees/{employee}', [EmployeeController::class, 'update'])
+    ->whereIn('provider', [EmployeeProvider1::$providerName, EmployeeProvider2::$providerName])
+    ->whereNumber('employee');
 
