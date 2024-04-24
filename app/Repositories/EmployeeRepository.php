@@ -21,7 +21,7 @@ class EmployeeRepository implements EmployeeContract
     /**
      * @throws GuzzleException
      */
-    public function storeEmployee(string $provider, array $data)
+    public function store(string $provider, array $data)
     {
         $mappedData = match ($provider){
             EmployeeProvider1::$providerName => EmployeeProvider1::mapAttributes($data),
@@ -31,6 +31,21 @@ class EmployeeRepository implements EmployeeContract
         $mappedData["tags"] = [$provider];
 
         return $this->trackTickApiService->storeEmployee($mappedData);
+    }
+
+    /**
+     * @throws GuzzleException
+     */
+    public function update(string $provider, int $employeeId, array $data)
+    {
+        $mappedData = match ($provider){
+            EmployeeProvider1::$providerName => EmployeeProvider1::mapAttributes($data),
+            EmployeeProvider2::$providerName => EmployeeProvider2::mapAttributes($data),
+        };
+
+        $mappedData["tags"] = [$provider];
+
+        return $this->trackTickApiService->updateEmployee($employeeId, $mappedData);
     }
 
 }

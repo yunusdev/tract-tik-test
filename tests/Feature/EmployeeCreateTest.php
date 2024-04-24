@@ -2,10 +2,8 @@
 
 namespace Tests\Feature;
 
-// use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Services\TrackTickApiService;
 use Tests\TestCase;
-use Illuminate\Support\Facades\Http;
 
 class EmployeeCreateTest extends TestCase
 {

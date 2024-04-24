@@ -22,7 +22,7 @@ class EmployeeController extends Controller
     public function store($provider, EmployeeCreateRequest $request): JsonResponse
     {
         try {
-            $employee = $this->employeeRepository->storeEmployee($provider, $request->all());
+            $employee = $this->employeeRepository->store($provider, $request->all());
 
             return $this->returnSuccess(
                 'Employee created successfully.',
@@ -32,11 +32,25 @@ class EmployeeController extends Controller
                 ]
             );
         } catch (Exception $exception) {
-            info('Code: ' . $exception->getCode());
-            info('message' . $exception->getMessage());
             return $this->returnError($exception->getMessage(), $exception->getCode());
         }
     }
 
+    public function update($provider, EmployeeCreateRequest $request, $employeeId): JsonResponse
+    {
+        try {
+            $employee = $this->employeeRepository->update($provider, $employeeId, $request->all());
+
+            return $this->returnSuccess(
+                'Employee updated successfully.',
+                Response::HTTP_OK,
+                [
+                    'employee' => $employee
+                ]
+            );
+        } catch (Exception $exception) {
+            return $this->returnError($exception->getMessage(), $exception->getCode());
+        }
+    }
 
 }
