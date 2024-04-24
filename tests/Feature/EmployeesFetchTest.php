@@ -62,4 +62,12 @@ class EmployeesFetchTest extends TestCase
         ]);
     }
 
+    public function test_failure_when_track_tik_is_not_authenticated_when_fetching_all_employees(): void
+    {
+        $response = $this->get("api/employees");
+        $response->assertStatus(401);
+
+        $this->assertFalse($response->json('success'));
+    }
+
 }

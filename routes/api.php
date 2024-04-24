@@ -3,7 +3,6 @@
 use App\Http\Controllers\EmployeeController;
 use App\Schemas\EmployeeProvider1;
 use App\Schemas\EmployeeProvider2;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*

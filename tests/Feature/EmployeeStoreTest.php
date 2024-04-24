@@ -101,6 +101,11 @@ class EmployeeStoreTest extends TestCase
                 'first_name' => 'Adam',
                 'last_name' => 'Steven'
             ], ['email']],
+            ['provider1', 401, [
+                'email' => 'adam@gmail.com',
+                'first_name' => 'Adam',
+                'last_name' => 'Steven'
+            ], []],
 
             ['provider2', 422, [], ['first_name', 'last_name', 'phone', 'job_title']],
             ['provider2', 422, [

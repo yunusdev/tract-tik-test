@@ -57,4 +57,20 @@ class EmployeeGetTest extends TestCase
         ]);
     }
 
+    public function test_failure_when_invalid_employee_is_used_when_getting_an_employee(): void
+    {
+        $response = $this->get("api/employees/invalid");
+        $response->assertStatus(404);
+
+        $this->assertFalse($response->json('success'));
+    }
+
+    public function test_failure_when_track_tik_is_not_authenticated_when_getting_an_employee(): void
+    {
+        $response = $this->get("api/employees/4052");
+        $response->assertStatus(401);
+
+        $this->assertFalse($response->json('success'));
+    }
+
 }

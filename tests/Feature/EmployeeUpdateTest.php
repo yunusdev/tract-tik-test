@@ -104,6 +104,11 @@ class EmployeeUpdateTest extends TestCase
                 'first_name' => 'Adam',
                 'last_name' => 'Steven'
             ], ['email']],
+            ['provider1', 3061, 401, [
+                'email' => 'adam@gmail.com',
+                'first_name' => 'Adam',
+                'last_name' => 'Steven'
+            ], ['email']],
 
             ['provider2', 3061, 422, [], ['first_name', 'last_name', 'phone', 'job_title']],
             ['provider2', 3061, 422, [
