@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\EmployeeCreateRequest;
+use App\Http\Requests\EmployeeStoreUpdateRequest;
 use App\Repositories\EmployeeRepository;
 use Exception;
-use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -19,7 +18,7 @@ class EmployeeController extends Controller
         $this->employeeRepository = $employeeRepository;
     }
 
-    public function store($provider, EmployeeCreateRequest $request): JsonResponse
+    public function store($provider, EmployeeStoreUpdateRequest $request): JsonResponse
     {
         try {
             $employee = $this->employeeRepository->store($provider, $request->all());
@@ -36,7 +35,7 @@ class EmployeeController extends Controller
         }
     }
 
-    public function update($provider, EmployeeCreateRequest $request, $employeeId): JsonResponse
+    public function update($provider, EmployeeStoreUpdateRequest $request, $employeeId): JsonResponse
     {
         try {
             $employee = $this->employeeRepository->update($provider, $employeeId, $request->all());

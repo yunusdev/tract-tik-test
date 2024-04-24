@@ -7,7 +7,7 @@ use App\Schemas\EmployeeProvider2;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class EmployeeUpdateRequest extends FormRequest
+class EmployeeStoreUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

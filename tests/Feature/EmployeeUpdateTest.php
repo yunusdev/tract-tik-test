@@ -1,18 +1,19 @@
 <?php
 
-namespace Tests\Feature;
+namespace Feature;
 
 use App\Services\TrackTickApiService;
 use Tests\TestCase;
 
-class EmployeeCreateTest extends TestCase
+class EmployeeUpdateTest extends TestCase
 {
-    public function test_success_when_creating_employee()
+    public function test_success_when_updating_employee()
     {
         $mockedResponse = [
             "meta" => [
                 "request" => [
-                    "employees"
+                    "employees",
+                    "3064"
                 ],
                 "security" => [
                     "granted" => true,
@@ -28,8 +29,8 @@ class EmployeeCreateTest extends TestCase
                 "region" => 1914,
                 "employmentProfile" => 1920,
                 "address" => 15410,
-                "id" => 3098,
-                "customId" => "3098",
+                "id" => 3064,
+                "customId" => "3064",
                 "firstName" => "John",
                 "lastName" => "Doe",
                 "name" => "John Doe",
@@ -41,19 +42,19 @@ class EmployeeCreateTest extends TestCase
             ]
         ];
         $trackTickApiServiceMock = $this->mock(TrackTickApiService::class);
-        $trackTickApiServiceMock->shouldReceive('storeEmployee')
+        $trackTickApiServiceMock->shouldReceive('updateEmployee')
             ->andReturn($mockedResponse);
 
-        $response = $this->post('api/provider1/employees', [
+        $response = $this->put('api/provider1/employees/3064', [
             'email' => 'john@gmail.com',
             'first_name' => 'John',
             'last_name' => 'Doe'
         ]);
 
-        $response->assertStatus(201);
+        $response->assertStatus(200);
 
         $response->assertJson([
-            'message' => 'Employee created successfully.',
+            'message' => 'Employee updated successfully.',
             'data' => [
                 'employee' => $mockedResponse
             ],
@@ -63,9 +64,9 @@ class EmployeeCreateTest extends TestCase
     /**
      * @dataProvider data
      */
-    public function test_failure_when_creating_employee($providerName, $status, $requestData, $errorAttributes): void
+    public function test_failure_when_updating_employee($providerName, $employeeId, $status, $requestData, $errorAttributes): void
     {
-        $response = $this->post("api/{$providerName}/employees", $requestData);
+        $response = $this->put("api/{$providerName}/employees/{$employeeId}", $requestData);
         $response->assertStatus($status);
 
         $boolStatus = $response->json('success');
@@ -86,28 +87,30 @@ class EmployeeCreateTest extends TestCase
     {
         return [
 
-            ['wrong_provider', 404, [], []],
+            ['wrong_provider', 345, 404, [], []],
 
-            ['provider1', 422, [], ['email', 'first_name', 'last_name']],
-            ['provider1', 422, [
+            ['provider1', 'invalid_employee_id', 404, [], []],
+
+            ['provider1', 3061, 422,  [], ['email', 'first_name', 'last_name']],
+            ['provider1', 3061, 422, [
                 'email' => 'adam@gmail.com',
                 'first_name' => 'Adam'
             ], ['last_name']],
-            ['provider1', 422, [
+            ['provider1', 3061, 422, [
                 'email' => 'adam@gmail.com'
             ], ['first_name', 'last_name']],
-            ['provider1', 422, [
+            ['provider1', 3061, 422, [
                 'email' => 'invalid',
                 'first_name' => 'Adam',
                 'last_name' => 'Steven'
             ], ['email']],
 
-            ['provider2', 422, [], ['first_name', 'last_name', 'phone', 'job_title']],
-            ['provider2', 422, [
+            ['provider2', 3061, 422, [], ['first_name', 'last_name', 'phone', 'job_title']],
+            ['provider2', 3061, 422, [
                 'first_name' => 'Adam',
                 'last_name' => 'Steven'
             ], ['phone', 'job_title']],
-            ['provider2', 422, [
+            ['provider2', 3061, 422, [
                 'first_name' => 'Adam',
                 'last_name' => 'Steven',
                 'job_title' => 'PHP Developer'
