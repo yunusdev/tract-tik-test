@@ -35,7 +35,24 @@ class EmployeeController extends Controller
             return $this->returnError($exception->getMessage(), $exception->getCode());
         }
     }
-    public function store($provider, EmployeeStoreUpdateRequest $request): JsonResponse
+
+    public function get(int $employeeId): JsonResponse
+    {
+        try {
+            $employee = $this->employeeRepository->get($employeeId);
+
+            return $this->returnSuccess(
+                'Employee fetched successfully.',
+                Response::HTTP_OK,
+                [
+                    'employee' => $employee
+                ]
+            );
+        } catch (Exception $exception) {
+            return $this->returnError($exception->getMessage(), $exception->getCode());
+        }
+    }
+    public function store(string $provider, EmployeeStoreUpdateRequest $request): JsonResponse
     {
         try {
             $employee = $this->employeeRepository->store($provider, $request->all());
@@ -52,7 +69,7 @@ class EmployeeController extends Controller
         }
     }
 
-    public function update($provider, EmployeeStoreUpdateRequest $request, $employeeId): JsonResponse
+    public function update(string $provider, EmployeeStoreUpdateRequest $request, int $employeeId): JsonResponse
     {
         try {
             $employee = $this->employeeRepository->update($provider, $employeeId, $request->all());

@@ -5,6 +5,7 @@ namespace App\Contracts;
 interface EmployeeContract
 {
     public function fetch(string|null $provider);
+    public function get(int $employeeId);
 
     public function store(string $provider, array $data);
 

@@ -65,6 +65,21 @@ class TrackTickApiService
         }
     }
 
+    public function getEmployee(int $employeeId)
+    {
+        try {
+            $response = $this->client->get("employees/{$employeeId}", [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . env('TRACK_TIK_ACCESS_TOKEN'),
+                ],
+            ]);
+
+            return json_decode($response->getBody(), true);
+        } catch (RequestException $e) {
+            throw new Exception('Failed get data from TrackTik API: ' . $e->getMessage(), $e->getCode());
+        }
+    }
+
     /**
      * @throws Exception|GuzzleException
      */

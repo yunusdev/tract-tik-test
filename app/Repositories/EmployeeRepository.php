@@ -26,6 +26,11 @@ class EmployeeRepository implements EmployeeContract
         return $this->trackTickApiService->fetchEmployees($provider);
     }
 
+    public function get(int $employeeId)
+    {
+        return $this->trackTickApiService->getEmployee($employeeId);
+    }
+
     /**
      * @throws GuzzleException
      */
