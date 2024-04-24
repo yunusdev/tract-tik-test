@@ -65,6 +65,9 @@ class TrackTickApiService
         }
     }
 
+    /**
+     * @throws Exception|GuzzleException
+     */
     public function getEmployee(int $employeeId)
     {
         try {

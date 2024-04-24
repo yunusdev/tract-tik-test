@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use App\Services\TrackTickApiService;
 use Tests\TestCase;
 
-class EmployeeCreateTest extends TestCase
+class EmployeeStoreTest extends TestCase
 {
     public function test_success_when_creating_employee()
     {
