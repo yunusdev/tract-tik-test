@@ -155,8 +155,7 @@ return [
 
     'track_tik' => [
         'base_url' => env('TRACK_TIK_BASE_URL'),
-        'client_id' => env('TRACK_TIK_CLIENT_ID'),
-        'client_secret' => env('TRACK_TIK_CLIENT_SECRET'),
+        'access_token' => env('TRACK_TIK_ACCESS_TOKEN'),
     ],
 
     /*

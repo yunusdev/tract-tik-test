@@ -10,38 +10,14 @@ class TrackTickApiService
 {
 
     private Client $client;
-    private string $refreshToken;
     private string $accessToken;
 
     public function __construct()
     {
         $this->client = new Client([
-            'base_uri' => config('app.track_tik.base_url'), // TrackTik API base URL
+            'base_uri' => config('app.track_tik.base_url')
         ]);
-    }
-
-    /**
-     * @throws Exception|GuzzleException
-     */
-    public function getAccessToken()
-    {
-        try {
-            $response = $this->client->post('oauth2/access_token', [
-                'form_params' => [
-                    'grant_type' => 'refresh_token',
-                    'refresh_token' => $this->refreshToken,
-                    'client_id' => '',
-                    'client_secret' => '',
-                ],
-            ]);
-
-            $data = json_decode($response->getBody(), true);
-            $this->accessToken = $data['access_token'];
-
-            return $this->accessToken;
-        } catch (RequestException $e) {
-            throw new Exception('Failed to get access token: ' . $e->getMessage(), $e->getCode());
-        }
+        $this->accessToken = config('app.track_tik.access_token');
     }
 
     /**
@@ -52,7 +28,7 @@ class TrackTickApiService
         try {
             $response = $this->client->get('employees', [
                 'headers' => [
-                    'Authorization' => 'Bearer ' . env('TRACK_TIK_ACCESS_TOKEN'),
+                    'Authorization' => "Bearer {$this->accessToken}",
                 ],
                 'query' => [
                     'tags:in' => $provider,
@@ -73,7 +49,7 @@ class TrackTickApiService
         try {
             $response = $this->client->get("employees/{$employeeId}", [
                 'headers' => [
-                    'Authorization' => 'Bearer ' . env('TRACK_TIK_ACCESS_TOKEN'),
+                    'Authorization' => "Bearer {$this->accessToken}",
                 ],
             ]);
 
@@ -91,7 +67,7 @@ class TrackTickApiService
         try {
             $response = $this->client->post('employees', [
                 'headers' => [
-                    'Authorization' => 'Bearer ' . env('TRACK_TIK_ACCESS_TOKEN'),
+                    'Authorization' => "Bearer {$this->accessToken}",
                 ],
                 'json' => $data,
             ]);
@@ -110,7 +86,7 @@ class TrackTickApiService
         try {
             $response = $this->client->put("employees/{$employeeId}", [
                 'headers' => [
-                    'Authorization' => 'Bearer ' . env('TRACK_TIK_ACCESS_TOKEN'),
+                    'Authorization' => "Bearer {$this->accessToken}",
                 ],
                 'json' => $data,
             ]);
