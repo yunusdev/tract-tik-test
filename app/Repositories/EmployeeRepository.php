@@ -3,6 +3,8 @@
 
 namespace App\Repositories;
 use App\Contracts\EmployeeContract;
+use App\Http\Transformers\EmployeeCollection;
+use App\Http\Transformers\EmployeeResource;
 use App\Models\Employee;
 use App\Schemas\EmployeeProvider1;
 use App\Schemas\EmployeeProvider2;
@@ -21,17 +23,23 @@ class EmployeeRepository extends BaseRepository implements EmployeeContract
         $this->trackTickApiService = $trackTickApiService;
     }
 
-    /**
-     * @throws GuzzleException
-     */
-    public function fetch(string|null $provider)
+    public function fetch(string|null $provider, int $limit): EmployeeCollection
     {
-        return $this->trackTickApiService->fetchEmployees($provider);
+        $filter = $provider ? ['provider' => $provider] : [];
+        return new EmployeeCollection($this->paginate($filter, $limit));
     }
 
-    public function get(int $employeeId)
+    /**
+     * @throws Exception
+     */
+    public function get(int $trackTikEmployeeId): EmployeeResource
     {
-        return $this->trackTickApiService->getEmployee($employeeId);
+        $employee = $this->findOneBy(['track_tik_id' => $trackTikEmployeeId]);
+
+        if(!$employee){
+            throw new Exception('Employee with the Track Tik ID doesnt exist.', 404);
+        }
+        return EmployeeResource::make($employee);
     }
 
     /**
@@ -66,7 +74,6 @@ class EmployeeRepository extends BaseRepository implements EmployeeContract
 
         $employee = $this->findOneBy(['track_tik_id' => $trackTikEmployeeId]);
         if($employee && $employee->provider !== $provider){
-            info($employee);
             throw new Exception('This provider cant update the employee with the Track Tick ID.', 400);
         }
 

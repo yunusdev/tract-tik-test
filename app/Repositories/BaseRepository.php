@@ -3,9 +3,6 @@
 namespace App\Repositories;
 
 use App\Contracts\BaseContract;
-use Exception;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 class BaseRepository implements BaseContract
@@ -19,7 +16,6 @@ class BaseRepository implements BaseContract
 
     public function store(array $attributes): mixed
     {
-        info($attributes);
         return $this->model->create($attributes);
     }
 

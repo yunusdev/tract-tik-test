@@ -24,7 +24,8 @@ class EmployeeController extends Controller
     public function index(Request $request): JsonResponse
     {
         try {
-            $employees = $this->employeeRepository->fetch($request->get('provider'));
+            $limit = $request->get('limit') ?? 10;
+            $employees = $this->employeeRepository->fetch($request->get('provider'), $limit);
 
             return $this->returnSuccess(
                 'Employees fetched successfully.',
@@ -71,10 +72,10 @@ class EmployeeController extends Controller
         }
     }
 
-    public function update(string $provider, EmployeeUpdateRequest $request, $employeeId): JsonResponse
+    public function update(string $provider, EmployeeUpdateRequest $request, $trackTikEmployeeId): JsonResponse
     {
         try {
-            $employee = $this->employeeRepository->updateEmployee($provider, $employeeId, $request->all());
+            $employee = $this->employeeRepository->updateEmployee($provider, $trackTikEmployeeId, $request->all());
 
             return $this->returnSuccess(
                 'Employee updated successfully.',

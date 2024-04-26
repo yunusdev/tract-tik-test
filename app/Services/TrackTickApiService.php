@@ -23,45 +23,6 @@ class TrackTickApiService
     /**
      * @throws Exception|GuzzleException
      */
-    public function fetchEmployees(string|null $provider): mixed
-    {
-        try {
-            $response = $this->client->get('employees', [
-                'headers' => [
-                    'Authorization' => "Bearer {$this->accessToken}",
-                ],
-                'query' => [
-                    'tags:in' => $provider,
-                ]
-            ]);
-
-            return json_decode($response->getBody(), true);
-        } catch (RequestException $e) {
-            throw new Exception('Failed get data from TrackTik API: ' . $e->getMessage(), $e->getCode());
-        }
-    }
-
-    /**
-     * @throws Exception|GuzzleException
-     */
-    public function getEmployee(int $employeeId): mixed
-    {
-        try {
-            $response = $this->client->get("employees/{$employeeId}", [
-                'headers' => [
-                    'Authorization' => "Bearer {$this->accessToken}",
-                ],
-            ]);
-
-            return json_decode($response->getBody(), true);
-        } catch (RequestException $e) {
-            throw new Exception('Failed get data from TrackTik API: ' . $e->getMessage(), $e->getCode());
-        }
-    }
-
-    /**
-     * @throws Exception|GuzzleException
-     */
     public function storeEmployee(array $data)
     {
         try {

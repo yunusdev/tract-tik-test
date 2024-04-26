@@ -38,7 +38,7 @@ trait Responses
         int|string $code = Response::HTTP_INTERNAL_SERVER_ERROR,
         array $data = null
     ): JsonResponse {
-        if (!is_numeric($code)) $code = Response::HTTP_INTERNAL_SERVER_ERROR;
+        if (!is_numeric($code) || $code == "0") $code = Response::HTTP_INTERNAL_SERVER_ERROR;
         return response()->json([
             'success' => false,
             'message' => $message ?? 'An error occurred',
