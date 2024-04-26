@@ -2,7 +2,7 @@
 
 namespace App\Schemas;
 
-class EmployeeProvider2
+class EmployeeProvider2 extends BaseEmployeeProvider
 {
     public static string $providerName = 'provider2';
 

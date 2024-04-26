@@ -2,9 +2,7 @@
 
 namespace App\Schemas;
 
-use Illuminate\Validation\Rule;
-
-class EmployeeProvider1
+class EmployeeProvider1 extends BaseEmployeeProvider
 {
     public static string $providerName = 'provider1';
 
@@ -25,7 +23,7 @@ class EmployeeProvider1
             'last_name' => ['required','string'],
         ];
     }
-    public static function getUpdateValidationRules(int $employeeId): array
+    public static function getUpdateValidationRules(): array
     {
         return [
             'email' => ['required','email'],

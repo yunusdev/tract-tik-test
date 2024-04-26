@@ -27,7 +27,7 @@ class EmployeeUpdateRequest extends FormRequest
         $provider = $this->route('provider');
 
         return match ($provider) {
-            EmployeeProvider1::$providerName => EmployeeProvider1::getUpdateValidationRules($this->route('employee')),
+            EmployeeProvider1::$providerName => EmployeeProvider1::getUpdateValidationRules(),
             EmployeeProvider2::$providerName => EmployeeProvider2::getUpdateValidationRules(),
         };
     }
