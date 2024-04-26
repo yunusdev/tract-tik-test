@@ -23,7 +23,7 @@ class TrackTickApiService
     /**
      * @throws Exception|GuzzleException
      */
-    public function fetchEmployees(string|null $provider)
+    public function fetchEmployees(string|null $provider): mixed
     {
         try {
             $response = $this->client->get('employees', [
@@ -44,7 +44,7 @@ class TrackTickApiService
     /**
      * @throws Exception|GuzzleException
      */
-    public function getEmployee(int $employeeId)
+    public function getEmployee(int $employeeId): mixed
     {
         try {
             $response = $this->client->get("employees/{$employeeId}", [
@@ -81,7 +81,7 @@ class TrackTickApiService
     /**
      * @throws Exception|GuzzleException
      */
-    public function updateEmployee(int $employeeId, array $data)
+    public function updateEmployee(int $employeeId, array $data): mixed
     {
         try {
             $response = $this->client->put("employees/{$employeeId}", [
