@@ -1,14 +1,19 @@
 <?php
 
-namespace Feature;
+namespace Tests\Feature;
 
+use App\Models\Employee;
 use App\Services\TrackTickApiService;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class EmployeeUpdateTest extends TestCase
 {
+    use RefreshDatabase;
     public function test_success_when_updating_employee()
     {
+        $trackTikEmployeeId = 3064;
+
         $mockedResponse = [
             "meta" => [
                 "request" => [
@@ -45,20 +50,187 @@ class EmployeeUpdateTest extends TestCase
         $trackTickApiServiceMock->shouldReceive('updateEmployee')
             ->andReturn($mockedResponse);
 
-        $response = $this->put('api/provider1/employees/3064', [
+        $requestData = [
             'email' => 'john@gmail.com',
             'first_name' => 'John',
             'last_name' => 'Doe'
-        ]);
+        ];
+
+        $response = $this->put('api/provider1/employees/3064', $requestData);
 
         $response->assertStatus(200);
+
+        $requestData['track_tik_id'] = $trackTikEmployeeId;
 
         $response->assertJson([
             'message' => 'Employee updated successfully.',
             'data' => [
-                'employee' => $mockedResponse
+                'employee' => $requestData
             ],
         ]);
+    }
+    public function test_employees_count_after_updating_an_employee_that_doesnt_have_a_db_record()
+    {
+        $this->assertSame(0, Employee::query()->count());
+
+        $mockedResponse = [
+            "meta" => [
+                "request" => [
+                    "employees",
+                    "3064"
+                ],
+                "security" => [
+                    "granted" => true,
+                    "requested" => "admin:employees:view",
+                    "grantedBy" => "admin:*",
+                    "scope" => "core:entities:employees:read"
+                ],
+                "debug" => null,
+                "resource" => "employees"
+            ],
+            "data" => [
+                "jobTitle" => "PHP Developer",
+                "region" => 1914,
+                "employmentProfile" => 1920,
+                "address" => 15410,
+                "id" => 3064,
+                "customId" => "3064",
+                "firstName" => "John",
+                "lastName" => "Doe",
+                "name" => "John Doe",
+                "primaryPhone" => "",
+                "secondaryPhone" => "",
+                "email" => "john@gmail.com",
+                "status" => "ACTIVE",
+                "avatar" => "https://smoke.staffr.net/rest/v1/avatar/employees/3066/4bab77d25280094b20dc81632fec07d9"
+            ]
+        ];
+        $trackTickApiServiceMock = $this->mock(TrackTickApiService::class);
+        $trackTickApiServiceMock->shouldReceive('updateEmployee')
+            ->andReturn($mockedResponse);
+
+        $this->put('api/provider2/employees/3064', [
+            'first_name' => 'Adam',
+            'last_name' => 'Steven',
+            'job_title' => 'PHP Developer',
+            'phone' => '+74 3331 3822'
+        ]);
+
+        $this->assertSame(1, Employee::query()->count());
+    }
+    public function test_employees_count_after_updating_an_employee_that_has_a_db_record()
+    {
+        $trackTikEmployeeId = 3064;
+
+        Employee::factory()->provider1()->trackTikId($trackTikEmployeeId)->create();
+
+        $this->assertSame(1, Employee::query()->count());
+
+        $mockedResponse = [
+            "meta" => [
+                "request" => [
+                    "employees",
+                    "3064"
+                ],
+                "security" => [
+                    "granted" => true,
+                    "requested" => "admin:employees:view",
+                    "grantedBy" => "admin:*",
+                    "scope" => "core:entities:employees:read"
+                ],
+                "debug" => null,
+                "resource" => "employees"
+            ],
+            "data" => [
+                "jobTitle" => "PHP Developer",
+                "region" => 1914,
+                "employmentProfile" => 1920,
+                "address" => 15410,
+                "id" => 3064,
+                "customId" => "3064",
+                "firstName" => "John",
+                "lastName" => "Doe",
+                "name" => "John Doe",
+                "primaryPhone" => "",
+                "secondaryPhone" => "",
+                "email" => "john@gmail.com",
+                "status" => "ACTIVE",
+                "avatar" => "https://smoke.staffr.net/rest/v1/avatar/employees/3066/4bab77d25280094b20dc81632fec07d9"
+            ]
+        ];
+        $trackTickApiServiceMock = $this->mock(TrackTickApiService::class);
+        $trackTickApiServiceMock->shouldReceive('updateEmployee')
+            ->andReturn($mockedResponse);
+
+        $requestData = [
+            'email' => 'john@gmail.com',
+            'first_name' => 'John',
+            'last_name' => 'Doe'
+        ];
+
+        $this->put('api/provider1/employees/3064', $requestData);
+
+        $this->assertSame(1, Employee::query()->count());
+    }
+    public function test_employee_data_after_updating_an_employee_that_has_a_db_record()
+    {
+        $trackTikEmployeeId = 3064;
+
+        Employee::factory()->provider2()->trackTikId($trackTikEmployeeId)->create();
+
+        $mockedResponse = [
+            "meta" => [
+                "request" => [
+                    "employees",
+                    "3064"
+                ],
+                "security" => [
+                    "granted" => true,
+                    "requested" => "admin:employees:view",
+                    "grantedBy" => "admin:*",
+                    "scope" => "core:entities:employees:read"
+                ],
+                "debug" => null,
+                "resource" => "employees"
+            ],
+            "data" => [
+                "jobTitle" => "PHP Developer",
+                "region" => 1914,
+                "employmentProfile" => 1920,
+                "address" => 15410,
+                "id" => 3064,
+                "customId" => "3064",
+                "firstName" => "John",
+                "lastName" => "Doe",
+                "name" => "John Doe",
+                "primaryPhone" => "+74 3331 3822",
+                "secondaryPhone" => "",
+                "email" => "",
+                "status" => "ACTIVE",
+                "avatar" => "https://smoke.staffr.net/rest/v1/avatar/employees/3066/4bab77d25280094b20dc81632fec07d9"
+            ]
+        ];
+        $trackTickApiServiceMock = $this->mock(TrackTickApiService::class);
+        $trackTickApiServiceMock->shouldReceive('updateEmployee')
+            ->andReturn($mockedResponse);
+
+        $requestData = [
+            'first_name' => 'John',
+            'last_name' => 'Doe',
+            'job_title' => 'PHP Developer',
+            'phone' => '+74 3331 3822'
+        ];
+
+        $this->put("api/provider2/employees/{$trackTikEmployeeId}", $requestData);
+
+        $employee = Employee::query()->first();
+
+        $this->assertSame($requestData['first_name'], $employee->first_name);
+        $this->assertSame($requestData['last_name'], $employee->last_name);
+        $this->assertSame($requestData['job_title'], $employee->job_title);
+        $this->assertSame($requestData['phone'], $employee->phone);
+        $this->assertSame($trackTikEmployeeId, $employee->track_tik_id);
+        $this->assertNull($employee->email);
     }
 
     /**
