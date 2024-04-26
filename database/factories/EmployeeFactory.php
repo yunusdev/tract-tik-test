@@ -32,6 +32,7 @@ class EmployeeFactory extends Factory
     {
         return $this->state(function () {
             return [
+                'provider' => 'provider1',
                 'email' => $this->faker->email(),
             ];
         });
@@ -41,6 +42,7 @@ class EmployeeFactory extends Factory
     {
         return $this->state(function () {
             return [
+                'provider' => 'provider2',
                 'phone' => $this->faker->phoneNumber(),
                 'job_title' => $this->faker->jobTitle(),
             ];
