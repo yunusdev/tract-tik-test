@@ -2,72 +2,126 @@
 
 namespace Tests\Feature;
 
-use App\Services\TrackTickApiService;
+use App\Models\Employee;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class EmployeesFetchTest extends TestCase
 {
-    public function test_success_when_fetching_employees()
+    use RefreshDatabase;
+    public function test_employees_data_when_fetching_employees(): void
     {
-        $mockedResponse = [
-            "meta" => [
-                "count" => 1,
-                "request" => [
-                    "employees"
-                ],
-                "itemCount" => 1,
-                "security" => [
-                    "granted" => true,
-                    "requested" => "admin:employees:view",
-                    "grantedBy" => "admin:*",
-                    "scope" => "core:entities:employees:read"
-                ],
-                "debug" => null,
-                "resource" => "employees",
-                "limit" => 100,
-                "offset" => 0
-            ],
-            "data" => [
-                [
-                    "jobTitle" => "PHP Developer",
-                    "region" => 1914,
-                    "employmentProfile" => 1920,
-                    "address" => 15410,
-                    "id" => 3098,
-                    "customId" => "3098",
-                    "firstName" => "John",
-                    "lastName" => "Doe",
-                    "name" => "John Doe",
-                    "primaryPhone" => "",
-                    "secondaryPhone" => "",
-                    "email" => "john@gmail.com",
-                    "status" => "ACTIVE",
-                    "avatar" => "https://smoke.staffr.net/rest/v1/avatar/employees/3066/4bab77d25280094b20dc81632fec07d9"
-                ]
-            ]
+
+        $provider1Employee = [
+            'email' => 'john@gmail.com',
+            'first_name' => 'John',
+            'last_name' => 'Doe',
+            'provider' => 'provider1',
+            'track_tik_id' => '2494'
         ];
-        $trackTickApiServiceMock = $this->mock(TrackTickApiService::class);
-        $trackTickApiServiceMock->shouldReceive('fetchEmployees')
-            ->andReturn($mockedResponse);
+        $provider2Employee = [
+            'first_name' => 'Adam',
+            'last_name' => 'Steven',
+            'job_title' => 'PHP Developer',
+            'phone' => '+74 3331 3822',
+            'provider' => 'provider2',
+            'track_tik_id' => '3489'
+        ];
+        Employee::factory()->provider1()->create($provider1Employee);
+        Employee::factory()->provider2()->create($provider2Employee);
 
-        $response = $this->get('api/employees');
-
-        $response->assertStatus(200);
-
-        $response->assertJson([
-            'message' => 'Employees fetched successfully.',
-            'data' => [
-                'employees' => $mockedResponse
-            ],
-        ]);
+        $this->get('api/employees')
+                ->assertStatus(200)
+                ->assertJson([
+                    'success' => true,
+                    'message' => 'Employees fetched successfully.',
+                    'data' => [
+                        'employees' => [
+                            'items' => [
+                                $provider1Employee,
+                                $provider2Employee,
+                            ],
+                            'pagination' => [
+                                'total' => 2,
+                                'count' => 2,
+                                'per_page' => 10,
+                                'current_page' => 1,
+                                'total_pages' => 1,
+                            ]
+                        ]
+                    ],
+                ]);
     }
-
-    public function test_failure_when_track_tik_is_not_authenticated_when_fetching_all_employees(): void
+    public function test_employees_data_when_fetching_provider1_employees() : void
     {
-        $response = $this->get("api/employees");
-        $response->assertStatus(401);
 
-        $this->assertFalse($response->json('success'));
+        $provider1Employee = [
+            'email' => 'john@gmail.com',
+            'first_name' => 'John',
+            'last_name' => 'Doe',
+            'provider' => 'provider1',
+            'track_tik_id' => '2494'
+        ];
+
+        Employee::factory()->provider1()->create($provider1Employee);
+        Employee::factory(3)->provider2()->create();
+
+        $this->get('api/employees?provider=provider1')
+                ->assertStatus(200)
+                ->assertJson([
+                    'success' => true,
+                    'message' => 'Employees fetched successfully.',
+                    'data' => [
+                        'employees' => [
+                            'items' => [
+                                $provider1Employee,
+                            ],
+                            'pagination' => [
+                                'total' => 1,
+                                'count' => 1,
+                                'per_page' => 10,
+                                'current_page' => 1,
+                                'total_pages' => 1,
+                            ]
+                        ]
+                    ],
+                ]);
     }
+    public function test_employees_data_when_fetching_provider2_employees() : void
+    {
+
+        $provider2Employee = [
+            'first_name' => 'Adam',
+            'last_name' => 'Steven',
+            'job_title' => 'PHP Developer',
+            'phone' => '+74 3331 3822',
+            'provider' => 'provider2',
+            'track_tik_id' => '2494'
+        ];
+        Employee::factory(5)->provider1()->create();
+        Employee::factory()->provider2()->create($provider2Employee);
+
+        $this->get('api/employees?provider=provider2')
+                ->assertStatus(200)
+                ->assertJson([
+                    'success' => true,
+                    'message' => 'Employees fetched successfully.',
+                    'data' => [
+                        'employees' => [
+                            'items' => [
+                                $provider2Employee,
+                            ],
+                            'pagination' => [
+                                'total' => 1,
+                                'count' => 1,
+                                'per_page' => 10,
+                                'current_page' => 1,
+                                'total_pages' => 1,
+                            ]
+                        ]
+                    ],
+                ]);
+    }
+
 
 }
