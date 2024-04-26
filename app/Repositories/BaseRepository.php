@@ -19,6 +19,7 @@ class BaseRepository implements BaseContract
 
     public function store(array $attributes): mixed
     {
+        info($attributes);
         return $this->model->create($attributes);
     }
 
@@ -27,9 +28,9 @@ class BaseRepository implements BaseContract
         return $this->model->find($id);
     }
 
-    public function update(int $id, array $attributes): bool
+    public function updateOrCreate(array $filter, array $attributes)
     {
-        return $this->find($id)->update($attributes);
+        return $this->model->updateOrCreate($attributes, $filter);
     }
 
     public function paginate(array $filters = [], int $numPaginated = 10, string $orderBy = 'created_at', string $sortBy = 'desc'): mixed

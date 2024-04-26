@@ -6,9 +6,7 @@ interface BaseContract
     public function store(array $attributes): mixed;
 
     public function find(string $id): mixed;
-
-    public function update(int $id, array $attributes): bool;
-
+    public function updateOrCreate(array $filter, array $attributes);
     public function paginate(
         array $filters = [],
         int $numPaginated = 10,

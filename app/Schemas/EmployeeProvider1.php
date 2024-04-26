@@ -2,11 +2,13 @@
 
 namespace App\Schemas;
 
+use Illuminate\Validation\Rule;
+
 class EmployeeProvider1
 {
     public static string $providerName = 'provider1';
 
-    public static function mapAttributes($data): array
+    public static function mapTrackTikAttributes($data): array
     {
         return [
             'email' => $data['email'],
@@ -15,12 +17,20 @@ class EmployeeProvider1
         ];
     }
 
-    public static function getValidationRules(): array
+    public static function getCreateValidationRules(): array
     {
         return [
-            'email' => 'required|email',
-            'first_name' => 'required|string',
-            'last_name' => 'required|string',
+            'email' => ['required','email', 'unique:employees'],
+            'first_name' => ['required','string'],
+            'last_name' => ['required','string'],
+        ];
+    }
+    public static function getUpdateValidationRules(int $employeeId): array
+    {
+        return [
+            'email' => ['required','email'],
+            'first_name' => ['required','string'],
+            'last_name' => ['required','string'],
         ];
     }
 }

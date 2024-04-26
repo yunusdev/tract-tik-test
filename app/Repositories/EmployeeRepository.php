@@ -3,18 +3,20 @@
 
 namespace App\Repositories;
 use App\Contracts\EmployeeContract;
+use App\Models\Employee;
 use App\Schemas\EmployeeProvider1;
 use App\Schemas\EmployeeProvider2;
 use App\Services\TrackTickApiService;
 use GuzzleHttp\Exception\GuzzleException;
 
-class EmployeeRepository implements EmployeeContract
+class EmployeeRepository extends BaseRepository implements EmployeeContract
 {
 
     protected TrackTickApiService $trackTickApiService;
 
-    public function __construct(TrackTickApiService $trackTickApiService)
+    public function __construct(Employee $model, TrackTickApiService $trackTickApiService)
     {
+        parent::__construct($model);
         $this->trackTickApiService = $trackTickApiService;
     }
 
@@ -34,31 +36,38 @@ class EmployeeRepository implements EmployeeContract
     /**
      * @throws GuzzleException
      */
-    public function store(string $provider, array $data)
+    public function storeEmployee(string $provider, array $data)
     {
-        $mappedData = match ($provider){
-            EmployeeProvider1::$providerName => EmployeeProvider1::mapAttributes($data),
-            EmployeeProvider2::$providerName => EmployeeProvider2::mapAttributes($data),
+        $mappedTrackTikData = match ($provider){
+            EmployeeProvider1::$providerName => EmployeeProvider1::mapTrackTikAttributes($data),
+            EmployeeProvider2::$providerName => EmployeeProvider2::mapTrackTikAttributes($data),
         };
 
-        $mappedData["tags"] = [$provider];
+        $mappedTrackTikData["tags"] = [$provider];
+        $employee = $this->trackTickApiService->storeEmployee($mappedTrackTikData);
 
-        return $this->trackTickApiService->storeEmployee($mappedData);
+        $data['track_tik_id'] = $employee['data']['id'];
+        $data['provider'] = $provider;
+
+        return $this->store($data);
+
     }
 
     /**
      * @throws GuzzleException
      */
-    public function update(string $provider, int $employeeId, array $data)
+    public function updateEmployee(string $provider, int $employeeId, array $data)
     {
-        $mappedData = match ($provider){
-            EmployeeProvider1::$providerName => EmployeeProvider1::mapAttributes($data),
-            EmployeeProvider2::$providerName => EmployeeProvider2::mapAttributes($data),
+        $mappedTrackTikData = match ($provider){
+            EmployeeProvider1::$providerName => EmployeeProvider1::mapTrackTikAttributes($data),
+            EmployeeProvider2::$providerName => EmployeeProvider2::mapTrackTikAttributes($data),
         };
 
-        $mappedData["tags"] = [$provider];
+        $mappedTrackTikData["tags"] = [$provider];
+        $employee = $this->trackTickApiService->updateEmployee($employeeId, $mappedTrackTikData);
 
-        return $this->trackTickApiService->updateEmployee($employeeId, $mappedData);
+        $data['provider'] = $provider;
+        return $this->updateOrCreate($data, ['track_tik_id' => $employee['data']['id']]);
     }
 
 }

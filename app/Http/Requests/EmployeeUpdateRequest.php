@@ -7,7 +7,7 @@ use App\Schemas\EmployeeProvider2;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class EmployeeStoreUpdateRequest extends FormRequest
+class EmployeeUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,8 +27,8 @@ class EmployeeStoreUpdateRequest extends FormRequest
         $provider = $this->route('provider');
 
         return match ($provider) {
-            EmployeeProvider1::$providerName => EmployeeProvider1::getValidationRules(),
-            EmployeeProvider2::$providerName => EmployeeProvider2::getValidationRules(),
+            EmployeeProvider1::$providerName => EmployeeProvider1::getUpdateValidationRules($this->route('employee')),
+            EmployeeProvider2::$providerName => EmployeeProvider2::getUpdateValidationRules(),
         };
     }
 

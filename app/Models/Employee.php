@@ -11,6 +11,7 @@ class Employee extends Model
 
     protected $fillable = [
         'track_tik_id',
+        'provider',
         'first_name',
         'last_name',
         'email',

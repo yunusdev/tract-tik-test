@@ -6,7 +6,7 @@ class EmployeeProvider2
 {
     public static string $providerName = 'provider2';
 
-    public static function mapAttributes($data): array
+    public static function mapTrackTikAttributes($data): array
     {
         return [
             'firstName' => $data['first_name'],
@@ -16,13 +16,22 @@ class EmployeeProvider2
         ];
     }
 
-    public static function getValidationRules(): array
+    public static function getCreateValidationRules(): array
     {
         return [
-            'first_name' => 'required|string',
-            'last_name' => 'required|string',
-            'phone' => 'required|string',
-            'job_title' => 'required|string',
+            'first_name' => ['required','string'],
+            'last_name' => ['required','string'],
+            'phone' => ['required','string'],
+            'job_title' => ['required','string'],
+        ];
+    }
+    public static function getUpdateValidationRules(): array
+    {
+        return [
+            'first_name' => ['required','string'],
+            'last_name' => ['required','string'],
+            'phone' => ['required','string'],
+            'job_title' => ['required','string'],
         ];
     }
 }

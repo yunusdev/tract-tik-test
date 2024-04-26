@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\EmployeeStoreUpdateRequest;
+use App\Http\Requests\EmployeeStoreRequest;
+use App\Http\Requests\EmployeeUpdateRequest;
+use App\Models\Employee;
 use App\Repositories\EmployeeRepository;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -52,10 +54,10 @@ class EmployeeController extends Controller
             return $this->returnError($exception->getMessage(), $exception->getCode());
         }
     }
-    public function store(string $provider, EmployeeStoreUpdateRequest $request): JsonResponse
+    public function store(string $provider, EmployeeStoreRequest $request): JsonResponse
     {
         try {
-            $employee = $this->employeeRepository->store($provider, $request->all());
+            $employee = $this->employeeRepository->storeEmployee($provider, $request->all());
 
             return $this->returnSuccess(
                 'Employee created successfully.',
@@ -69,10 +71,10 @@ class EmployeeController extends Controller
         }
     }
 
-    public function update(string $provider, EmployeeStoreUpdateRequest $request, int $employeeId): JsonResponse
+    public function update(string $provider, EmployeeUpdateRequest $request, $employeeId): JsonResponse
     {
         try {
-            $employee = $this->employeeRepository->update($provider, $employeeId, $request->all());
+            $employee = $this->employeeRepository->updateEmployee($provider, $employeeId, $request->all());
 
             return $this->returnSuccess(
                 'Employee updated successfully.',
